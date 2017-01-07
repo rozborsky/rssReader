@@ -7,6 +7,7 @@ import com.sun.syndication.io.XmlReader;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -15,11 +16,20 @@ import java.util.List;
  */
 public class XMLreader {
 
-    public List listNews(String addres) throws IOException, FeedException {
-        URL url = new URL(addres);
-        HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
-        SyndFeedInput input = new SyndFeedInput();
-        SyndFeed feed = input.build(new XmlReader(httpcon));
+    public List listNews(String addres){
+        SyndFeed feed = null;
+        try{
+            URL url = new URL(addres);
+            HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
+            SyndFeedInput input = new SyndFeedInput();
+            feed = input.build(new XmlReader(httpcon));
+        } catch (MalformedURLException e) {
+
+        } catch (IOException e)  {
+
+        } catch (FeedException  e) {
+
+        }
 
         return feed.getEntries();
     }

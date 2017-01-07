@@ -1,9 +1,13 @@
 package ua.rozborsky.classes;
 
+import com.sun.syndication.feed.synd.SyndEntry;
 import ua.rozborsky.interfaces.View;
 
 import javax.swing.*;
 import java.awt.*;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by roman on 07.01.2017.
@@ -12,15 +16,20 @@ public class Window implements View {
 
     final private short WIDTH = 400;
     private short HEIGHT = 300;
-    private final Font FONT = new Font("Arial", Font.PLAIN, 20);
+    private final Font FONT = new Font("Arial", Font.PLAIN, 15);
+    private List content;
 
-    public void create() {
-        JFrame frame = new JFrame("RSS - news");
+    public void createWindow() {
+        JFrame frame = new JFrame("RSS reader");
         setWindowParameters(frame, WIDTH, HEIGHT);
         setComponents(frame);
 
         frame.setResizable(false);
         frame.setVisible(true);
+    }
+
+    public void addContent(List content) {
+        this.content = content;
     }
 
     private void setWindowParameters(JFrame frame, short width, short height) {
@@ -46,39 +55,58 @@ public class Window implements View {
     }
 
     private void setComponents(JFrame frame) {
-        frame.add(menu(frame));
-        frame.add(contentPanel());
+        frame.setLayout(new BorderLayout());
+        frame.add(menu(frame), BorderLayout.NORTH);
+
+        JPanel contentPanel = contentPanel(content);
+        frame.add(scrollBar(contentPanel), BorderLayout.CENTER);
     }
 
-    private JPanel menu(JFrame frame) {
+    private JScrollPane scrollBar(JPanel contentPanel) {
+        return new JScrollPane(contentPanel,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    }
+
+    private JPanel menu(JFrame frame) {//todo flowlayout
         JPanel menu = new JPanel();
-        menu.setLayout(new BorderLayout());
-
-        menu.add(sizeMenu());
-
+        menu.add(combobox());
         menu.setSize((int)frame.getSize().getWidth(), 20);
         menu.setBackground(new Color(204,229,225));
 
         return menu;
     }
 
-    private JPanel contentPanel() {
-        JPanel content = new JPanel();
-        content.setLayout(new BorderLayout());
-        content.add(new Label("content"), BorderLayout.CENTER );
-        content.setBackground(new Color(255,255,204));
+    private JPanel contentPanel(List content) {
+        JPanel contentPanel = new JPanel();
+        addNews(contentPanel, content);
+        contentPanel.setBackground(new Color(255, 255, 204));
 
-        return content;
+        return contentPanel;
     }
 
-    private JComboBox sizeMenu(){
-        JComboBox size = new JComboBox();
-        size.addItem("size");
-        size.addItem("normal");
-        size.addItem("big");
+    private JComboBox combobox(){
+        JComboBox combobox = new JComboBox();
+        combobox.addItem("size");
+        combobox.addItem("normal");
+        combobox.addItem("big");
+        combobox.setSelectedIndex(0);
 
-        size.setSelectedIndex(0);
-
-        return size;
+        return combobox;
     }
+
+    private void addNews(JPanel contentPanel, List content) {
+        Iterator itEntries = content.iterator();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+
+        while (itEntries.hasNext()) {
+            SyndEntry  entry = (SyndEntry) itEntries.next();
+            JLabel label = new JLabel("<html>" + entry.getDescription().getValue() + "<br/>" + entry.getLink() + "</html>");
+            label.setPreferredSize(new Dimension(300, 90));
+            label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            label.setFont(FONT);
+            contentPanel.add(label);
+        }
+    }
+
 }
