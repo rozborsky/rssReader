@@ -17,8 +17,9 @@ public class Window implements View {
     public void create() {
         JFrame frame = new JFrame("RSS - news");
         setWindowParameters(frame, WIDTH, HEIGHT);
+        setComponents(frame);
 
-
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 
@@ -42,5 +43,42 @@ public class Window implements View {
         Rectangle windowSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 
         return  (short)(screenHeigth - windowSize.height);
+    }
+
+    private void setComponents(JFrame frame) {
+        frame.add(menu(frame));
+        frame.add(contentPanel());
+    }
+
+    private JPanel menu(JFrame frame) {
+        JPanel menu = new JPanel();
+        menu.setLayout(new BorderLayout());
+
+        menu.add(sizeMenu());
+
+        menu.setSize((int)frame.getSize().getWidth(), 20);
+        menu.setBackground(new Color(204,229,225));
+
+        return menu;
+    }
+
+    private JPanel contentPanel() {
+        JPanel content = new JPanel();
+        content.setLayout(new BorderLayout());
+        content.add(new Label("content"), BorderLayout.CENTER );
+        content.setBackground(new Color(255,255,204));
+
+        return content;
+    }
+
+    private JComboBox sizeMenu(){
+        JComboBox size = new JComboBox();
+        size.addItem("size");
+        size.addItem("normal");
+        size.addItem("big");
+
+        size.setSelectedIndex(0);
+
+        return size;
     }
 }
