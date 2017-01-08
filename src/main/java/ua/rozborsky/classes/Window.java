@@ -6,6 +6,11 @@ import ua.rozborsky.interfaces.View;
 import javax.swing.*;
 import java.awt.*;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -82,6 +87,7 @@ public class Window implements View {
         addNews(contentPanel, content);
         contentPanel.setBackground(new Color(255, 255, 204));
 
+
         return contentPanel;
     }
 
@@ -101,12 +107,38 @@ public class Window implements View {
 
         while (itEntries.hasNext()) {
             SyndEntry  entry = (SyndEntry) itEntries.next();
-            JLabel label = new JLabel("<html>" + entry.getDescription().getValue() + "<br/>" + entry.getLink() + "</html>");
-            label.setPreferredSize(new Dimension(300, 90));
+            JLabel label = new JLabel("<html>" + entry.getDescription().getValue() + "</html>");
+            addLink(label, entry.getLink());
+
+            label.setPreferredSize(new Dimension(300, 70));
             label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             label.setFont(FONT);
             contentPanel.add(label);
         }
     }
+
+    private JLabel addLink(JLabel link, final String url) {
+        link.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        link.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() > 0) {
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop desktop = Desktop.getDesktop();
+                        try {
+                            URI uri = new URI(url);
+                            desktop.browse(uri);
+                        } catch (IOException ex) {
+                            // do nothing
+                        } catch (URISyntaxException ex) {
+                            //do nothing
+                        }
+                    }
+                }
+            }
+        });
+        return link;
+    }
+
+
 
 }
