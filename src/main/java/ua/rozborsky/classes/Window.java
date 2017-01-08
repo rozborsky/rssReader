@@ -75,7 +75,7 @@ public class Window implements View {
 
     private JPanel menu(JFrame frame) {//todo flowlayout
         JPanel menu = new JPanel();
-        menu.add(combobox());
+
         menu.setSize((int)frame.getSize().getWidth(), 20);
         menu.setBackground(new Color(204,229,225));
 
@@ -91,26 +91,16 @@ public class Window implements View {
         return contentPanel;
     }
 
-    private JComboBox combobox(){
-        JComboBox combobox = new JComboBox();
-        combobox.addItem("size");
-        combobox.addItem("normal");
-        combobox.addItem("big");
-        combobox.setSelectedIndex(0);
-
-        return combobox;
-    }
-
     private void addNews(JPanel contentPanel, List content) {
         Iterator itEntries = content.iterator();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
         while (itEntries.hasNext()) {
             SyndEntry  entry = (SyndEntry) itEntries.next();
-            JLabel label = new JLabel("<html>" + entry.getDescription().getValue() + "</html>");
+            JLabel label = new JLabel("<html>" + entry.getTitle() + "</html>");
             addLink(label, entry.getLink());
 
-            label.setPreferredSize(new Dimension(300, 70));
+            label.setPreferredSize(new Dimension(300, 30));
             label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             label.setFont(FONT);
             contentPanel.add(label);
