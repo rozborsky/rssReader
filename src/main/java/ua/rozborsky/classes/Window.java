@@ -1,6 +1,5 @@
 package ua.rozborsky.classes;
 
-import com.sun.syndication.feed.synd.SyndEntry;
 import ua.rozborsky.interfaces.View;
 
 import javax.swing.*;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public class Window implements View {
 
-    final private short WIDTH = 400;
+    private short WIDTH = 400;
     private short HEIGHT = 300;
     private final Font FONT = new Font("Arial", Font.PLAIN, 15);
     private List content;
@@ -92,13 +91,13 @@ public class Window implements View {
     }
 
     private void addNews(JPanel contentPanel, List content) {
-        Iterator itEntries = content.iterator();
+        Iterator entries = content.iterator();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        while (itEntries.hasNext()) {
-            SyndEntry  entry = (SyndEntry) itEntries.next();
+        while (entries.hasNext()) {
+            News  entry = (News) entries.next();
             JLabel label = new JLabel("<html>" + entry.getTitle() + "</html>");
-            addLink(label, entry.getLink());
+            addLink(label, entry.getUrl());
 
             label.setPreferredSize(new Dimension(300, 30));
             label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -126,9 +125,7 @@ public class Window implements View {
                 }
             }
         });
+
         return link;
     }
-
-
-
 }

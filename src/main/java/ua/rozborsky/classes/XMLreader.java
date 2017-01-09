@@ -32,6 +32,4 @@ public class XMLreader {
         }
         return feed.getEntries();
     }
-
-
 }
