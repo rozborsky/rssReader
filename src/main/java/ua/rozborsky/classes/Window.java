@@ -67,9 +67,12 @@ public class Window implements View {
     }
 
     private JScrollPane scrollBar(JPanel contentPanel) {
-        return new JScrollPane(contentPanel,
+        JScrollPane jScrollPane = new JScrollPane(contentPanel,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane.getVerticalScrollBar().setUnitIncrement(10);
+
+        return jScrollPane;
     }
 
     private JPanel menu(JFrame frame) {//todo flowlayout
