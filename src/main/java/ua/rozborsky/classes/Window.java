@@ -40,6 +40,7 @@ public class Window implements View {
         frame.setSize(width, height);
         setWindowPosition(frame, width, height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setAlwaysOnTop(true);
     }
 
     private void setWindowPosition(JFrame frame, short width, short height) {
