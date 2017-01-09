@@ -30,7 +30,8 @@ public class XMLreader {
         } catch (FeedException  e) {
 
         }
-
         return feed.getEntries();
     }
+
+
 }

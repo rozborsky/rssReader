@@ -46,6 +46,4 @@ public class SettingsManager {
             file.createNewFile();
         }
     }
-
-
 }

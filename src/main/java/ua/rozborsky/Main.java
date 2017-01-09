@@ -5,8 +5,6 @@ import ua.rozborsky.classes.Window;
 import ua.rozborsky.classes.XMLreader;
 import ua.rozborsky.interfaces.View;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class Main {
         SettingsManager settingsManager = new SettingsManager(pathToFile, filename);
         List urls = settingsManager.getURLs();
         List news = createListNews(urls);
-
+        System.out.println(news.size());
         View view = new Window();
         view.addContent(news);
         view.createWindow();
@@ -31,17 +29,17 @@ public class Main {
     }
 
     private static List createListNews(List urls) {
-        List news = new ArrayList();
+        List allNews = new ArrayList();
         XMLreader xmLreader = new XMLreader();
 
         for (int i = 0; i < urls.size(); i++) {
-            if (xmLreader.listNews(urls.get(i).toString()) != null) {
-                news.addAll(xmLreader.listNews(urls.get(i).toString()));
+            List news = xmLreader.listNews(urls.get(i).toString());
+            news = news.subList(0, 20);
+            if (news != null) {
+                allNews.addAll(news);
             }
         }
 
-        return news;
+        return allNews;
     }
-
-
 }
