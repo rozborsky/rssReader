@@ -29,6 +29,8 @@ public class XMLreader {
 
         } catch (FeedException  e) {
 
+        } catch (NullPointerException e) {
+
         }
 
         return feed.getEntries();

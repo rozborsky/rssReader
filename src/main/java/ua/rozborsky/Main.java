@@ -21,6 +21,7 @@ public class Main {
 
         View view = new Window();
         view.addContent(news);
+        view.addChannels(urls);
         view.createWindow();
     }
 }

@@ -1,9 +1,6 @@
 package ua.rozborsky.classes;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +36,26 @@ public class SettingsManager {
     }
 
 
-    private void createFile(String pathToFile, String filename) throws IOException {
+    private void createFile() throws IOException {
         File file = new File(pathToFile + "\\" + filename);
 
         if (!file.exists() || !file.isFile()) {
             file.createNewFile();
+        }
+    }
+
+    public void addChannel(String url) {
+        try(FileWriter writer = new FileWriter(pathToFile + "\\" + filename, true))
+        {
+            createFile();
+
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+            bufferedWriter.append(url);
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        }
+        catch(IOException ex){
+
         }
     }
 }

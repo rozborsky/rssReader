@@ -22,6 +22,7 @@ public class Window implements View {
     private short HEIGHT = 300;
     private final Font FONT = new Font("Arial", Font.PLAIN, 15);
     private List content;
+    private List channels;
 
     public void createWindow() {
         JFrame frame = new JFrame("RSS reader");
@@ -34,6 +35,10 @@ public class Window implements View {
 
     public void addContent(List content) {
         this.content = content;
+    }
+
+    public void addChannels(List channels) {
+        this.channels = channels;
     }
 
     private void setWindowParameters(JFrame frame, short width, short height) {
@@ -64,6 +69,7 @@ public class Window implements View {
         frame.add(menu(frame), BorderLayout.NORTH);
 
         JPanel contentPanel = contentPanel(content);
+
         frame.add(scrollBar(contentPanel), BorderLayout.CENTER);
     }
 
@@ -76,20 +82,39 @@ public class Window implements View {
         return jScrollPane;
     }
 
-    private JPanel menu(JFrame frame) {//todo flowlayout
+    private JPanel menu(JFrame frame) {
         JPanel menu = new JPanel();
+        menu.setLayout(new FlowLayout());
 
-        menu.setSize((int)frame.getSize().getWidth(), 20);
+
+        //JTextField textField=new JTextField(20);//todo add channel
+
+        //menu.add(textField);
+        menu.add(comboBox());
+        menu.add(new JButton("update"));
+
+        menu.setSize((int)frame.getSize().getWidth(), 50);
         menu.setBackground(new Color(204,229,225));
 
         return menu;
+    }
+
+    private JComboBox comboBox() {
+        JComboBox comboBox = new JComboBox();
+        comboBox.setSize(50, 40);
+
+        comboBox.addItem("channels");
+        for (int i = 0; i < channels.size(); i++) {
+            comboBox.addItem(channels.toArray()[i]);
+        }
+
+        return comboBox;
     }
 
     private JPanel contentPanel(List content) {
         JPanel contentPanel = new JPanel();
         addNews(contentPanel, content);
         contentPanel.setBackground(new Color(255, 255, 204));
-
 
         return contentPanel;
     }
