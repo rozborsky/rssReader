@@ -11,13 +11,17 @@ public class NewsManager {
 
     public List listNews(List urls) {
         List allNews = new ArrayList();
-        XMLreader xmLreader = new XMLreader();
+        XMLReader xmlReader = new XMLReader();
 
         for (int i = 0; i < urls.size(); i++) {
-            List news = xmLreader.listNews(urls.get(i).toString());
-            news = news.subList(0, 20);
-            if (news != null) {
-                allNews.addAll(news);
+            try{
+                List news = xmlReader.listNews(urls.get(i).toString());
+                news = news.subList(0, 20);
+                if (news != null) {
+                    allNews.addAll(news);
+                }
+            } catch (Exception e) {
+                continue;
             }
         }
         allNews = sortNews(allNews);

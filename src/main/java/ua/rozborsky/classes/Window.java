@@ -83,32 +83,13 @@ public class Window implements View {
     }
 
     private JPanel menu(JFrame frame) {
-        JPanel menu = new JPanel();
-        menu.setLayout(new FlowLayout());
+        JPanel menuBar = new JPanel();
+        menuBar.setLayout(new FlowLayout());
+        menuBar.setSize((int) frame.getSize().getWidth(), 50);
+        menuBar.setBackground(new Color(204, 229, 225));
+        menuBar.add(new JButton("menu"));
 
-
-        //JTextField textField=new JTextField(20);//todo add channel
-
-        //menu.add(textField);
-        menu.add(comboBox());
-        menu.add(new JButton("update"));
-
-        menu.setSize((int)frame.getSize().getWidth(), 50);
-        menu.setBackground(new Color(204,229,225));
-
-        return menu;
-    }
-
-    private JComboBox comboBox() {
-        JComboBox comboBox = new JComboBox();
-        comboBox.setSize(50, 40);
-
-        comboBox.addItem("channels");
-        for (int i = 0; i < channels.size(); i++) {
-            comboBox.addItem(channels.toArray()[i]);
-        }
-
-        return comboBox;
+        return menuBar;
     }
 
     private JPanel contentPanel(List content) {
