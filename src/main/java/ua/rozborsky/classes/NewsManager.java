@@ -11,7 +11,7 @@ public class NewsManager {
 
     public List listNews(List urls) {
         List allNews = new ArrayList();
-        XMLReader xmlReader = new XMLReader();
+        XMLreader xmlReader = new XMLreader();
 
         for (int i = 0; i < urls.size(); i++) {
             try{
