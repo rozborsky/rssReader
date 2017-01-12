@@ -1,6 +1,5 @@
 package ua.rozborsky.interfaces;
 
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -9,5 +8,4 @@ import java.util.List;
 public interface View {
     void createWindow();
     void addContent(List content);
-    void addChannels(List channels);
 }

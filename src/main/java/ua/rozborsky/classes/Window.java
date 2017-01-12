@@ -5,6 +5,8 @@ import ua.rozborsky.interfaces.View;
 import javax.swing.*;
 import java.awt.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -22,10 +24,10 @@ public class Window implements View {
     private short HEIGHT = 300;
     private final Font FONT = new Font("Arial", Font.PLAIN, 15);
     private List content;
-    private List channels;
+    private JFrame frame;
 
     public void createWindow() {
-        JFrame frame = new JFrame("RSS reader");
+        frame = new JFrame("RSS reader");
         setWindowParameters(frame, WIDTH, HEIGHT);
         setComponents(frame);
 
@@ -37,9 +39,6 @@ public class Window implements View {
         this.content = content;
     }
 
-    public void addChannels(List channels) {
-        this.channels = channels;
-    }
 
     private void setWindowParameters(JFrame frame, short width, short height) {
         frame.setSize(width, height);
@@ -67,9 +66,7 @@ public class Window implements View {
     private void setComponents(JFrame frame) {
         frame.setLayout(new BorderLayout());
         frame.add(menu(frame), BorderLayout.NORTH);
-
         JPanel contentPanel = contentPanel(content);
-
         frame.add(scrollBar(contentPanel), BorderLayout.CENTER);
     }
 
@@ -84,12 +81,42 @@ public class Window implements View {
 
     private JPanel menu(JFrame frame) {
         JPanel menuBar = new JPanel();
-        menuBar.setLayout(new FlowLayout());
+        menuBar.setLayout(new BorderLayout());
         menuBar.setSize((int) frame.getSize().getWidth(), 50);
         menuBar.setBackground(new Color(204, 229, 225));
-        menuBar.add(new JButton("menu"));
+        menuBar.add(menuButton(), BorderLayout.WEST);
+        menuBar.add(getNewsButton(), BorderLayout.EAST);
 
         return menuBar;
+    }
+
+    private JButton menuButton() {
+        JButton button = new JButton("channels");
+        button.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                frame.setEnabled(false);
+                MenuWindow window = new MenuWindow();
+                window.createWindow(frame);
+                frame.setEnabled(true);
+            }
+        });
+
+        return button;
+    }
+
+    private JButton getNewsButton() {
+        JButton button = new JButton("getNews");
+        button.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+
+            }
+        });
+
+        return button;
     }
 
     private JPanel contentPanel(List content) {
