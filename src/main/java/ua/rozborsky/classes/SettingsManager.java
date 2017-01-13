@@ -8,14 +8,8 @@ import java.util.List;
  * Created by roman on 08.01.2017.
  */
 public class SettingsManager {
-
-    private String pathToFile;
-    private String filename;
-
-    public SettingsManager(String pathToFile, String filename) {
-        this.pathToFile = pathToFile;
-        this.filename = filename;
-    }
+    private String pathToFile = "C:\\Users\\roman";
+    private String filename = "RSSreaderURLs.txt";
 
     public List getURLs() {
         List urls = new ArrayList();
@@ -56,6 +50,33 @@ public class SettingsManager {
         }
         catch(IOException ex){
 
+        }
+    }
+
+    public void deleteChannel(String channelToRemove) {
+        try {
+            File channel = new File(pathToFile + "\\" + filename);
+            File file = new File(channel.getAbsolutePath() + ".tmp");
+
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(channel));
+            PrintWriter printWriter = new PrintWriter(new FileWriter(file));
+            String line ;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                if (!line.trim().equals(channelToRemove)) {
+                    printWriter.println(line);
+                    printWriter.flush();
+                }
+            }
+            printWriter.close();
+            bufferedReader.close();
+            channel.delete();
+            file.renameTo(channel);
+
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

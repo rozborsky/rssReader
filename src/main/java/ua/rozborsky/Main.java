@@ -10,10 +10,9 @@ import java.util.*;
  */
 public class Main {
     public static void main(String[] args){
-        String pathToFile = "C:\\Users\\roman";
-        String filename = "RSSreaderURLs.txt";
 
-        SettingsManager settingsManager = new SettingsManager(pathToFile, filename);
+        SettingsManager settingsManager = new SettingsManager();
+
         List urls = settingsManager.getURLs();
 
         NewsManager newsManager = new NewsManager();
