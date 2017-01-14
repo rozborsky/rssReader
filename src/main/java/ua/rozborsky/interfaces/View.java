@@ -7,5 +7,4 @@ import java.util.List;
  */
 public interface View {
     void createWindow();
-    void addContent(List content);
 }

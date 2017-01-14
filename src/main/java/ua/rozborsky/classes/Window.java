@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,11 +20,9 @@ import java.util.List;
  * Created by roman on 07.01.2017.
  */
 public class Window implements View {
-
     private short WIDTH = 400;
     private short HEIGHT = 300;
     private final Font FONT = new Font("Arial", Font.PLAIN, 15);
-    private List content;
     private JFrame frame;
 
     public void createWindow() {
@@ -35,10 +34,18 @@ public class Window implements View {
         frame.setVisible(true);
     }
 
-    public void addContent(List content) {
-        this.content = content;
-    }
+    private List news() {
+        SettingsManager settingsManager = new SettingsManager();
+        List urls = Collections.EMPTY_LIST;
+        try {
+            urls = settingsManager.getURLs();
+        } catch (IOException e) {
+            new ErrorWindow(frame, "can't find property file");
+        }
+        NewsManager newsManager = new NewsManager();
 
+        return newsManager.listNews(urls);
+    }
 
     private void setWindowParameters(JFrame frame, short width, short height) {
         frame.setSize(width, height);
@@ -57,17 +64,10 @@ public class Window implements View {
         frame.setLocation(screenWidth - width, screenHeigth - height - taskBarHeight(screenHeigth));
     }
 
-    private short taskBarHeight(short screenHeigth) {
+    private short taskBarHeight(short screenHeight) {
         Rectangle windowSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 
-        return  (short)(screenHeigth - windowSize.height);
-    }
-
-    private void setComponents(JFrame frame) {
-        frame.setLayout(new BorderLayout());
-        frame.add(menu(frame), BorderLayout.NORTH);
-        JPanel contentPanel = contentPanel(content);
-        frame.add(scrollBar(contentPanel), BorderLayout.CENTER);
+        return  (short)(screenHeight - windowSize.height);
     }
 
     private JScrollPane scrollBar(JPanel contentPanel) {
@@ -79,13 +79,20 @@ public class Window implements View {
         return jScrollPane;
     }
 
-    private JPanel menu(JFrame frame) {
+    private void setComponents(JFrame frame) {
+        frame.setLayout(new BorderLayout());
+        JPanel newsPanel = newsPanel(news());
+        frame.add(menuPanel(newsPanel), BorderLayout.NORTH);
+        frame.add(scrollBar(newsPanel), BorderLayout.CENTER);
+    }
+
+    private JPanel menuPanel(JPanel newsPanel) {
         JPanel menuBar = new JPanel();
         menuBar.setLayout(new BorderLayout());
         menuBar.setSize((int) frame.getSize().getWidth(), 50);
         menuBar.setBackground(new Color(204, 229, 225));
         menuBar.add(menuButton(), BorderLayout.WEST);
-        menuBar.add(getNewsButton(), BorderLayout.EAST);
+        menuBar.add(getNewsButton(newsPanel), BorderLayout.EAST);
 
         return menuBar;
     }
@@ -106,20 +113,23 @@ public class Window implements View {
         return button;
     }
 
-    private JButton getNewsButton() {
+    private JButton getNewsButton(final JPanel newsPanel) {
         JButton button = new JButton("getNews");
         button.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
 
+                //newsPanel.revalidate();
+                SwingUtilities.updateComponentTreeUI(newsPanel);
+                System.out.println("getnews");
             }
         });
 
         return button;
     }
 
-    private JPanel contentPanel(List content) {
+    private JPanel newsPanel(List content) {
         JPanel contentPanel = new JPanel();
         addNews(contentPanel, content);
         contentPanel.setBackground(new Color(255, 255, 204));
@@ -147,19 +157,17 @@ public class Window implements View {
         link.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         link.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() > 0) {
-                    if (Desktop.isDesktopSupported()) {
-                        Desktop desktop = Desktop.getDesktop();
-                        try {
-                            URI uri = new URI(url);
-                            desktop.browse(uri);
-                        } catch (IOException ex) {
-                            // do nothing
-                        } catch (URISyntaxException ex) {
-                            //do nothing
-                        }
+            if (e.getClickCount() > 0) {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop desktop = Desktop.getDesktop();
+                    try {
+                        URI uri = new URI(url);
+                        desktop.browse(uri);
+                    } catch (IOException | URISyntaxException ex) {
+                        new ErrorWindow(frame, "can't open news");
                     }
                 }
+            }
             }
         });
 

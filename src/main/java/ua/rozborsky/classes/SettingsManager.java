@@ -11,72 +11,55 @@ public class SettingsManager {
     private String pathToFile = "C:\\Users\\roman";
     private String filename = "RSSreaderURLs.txt";
 
-    public List getURLs() {
-        List urls = new ArrayList();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(pathToFile + "\\" + filename))) {
-            String currentLine;
-            while ((currentLine = br.readLine()) != null) {
-                urls.add(currentLine);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public List getURLs() throws IOException {
+        List <String> channels = new ArrayList();
+        BufferedReader br = new BufferedReader(new FileReader(pathToFile + "\\" + filename));
+        String currentLine;
+        while ((currentLine = br.readLine()) != null) {
+            channels.add(currentLine);
         }
 //        https://lenta.ru/rss
 //        https://snob.ru/rss/all
 //        http://www.pravda.com.ua/rss/
 
-        return urls;
+        return channels;
     }
 
 
     private void createFile() throws IOException {
         File file = new File(pathToFile + "\\" + filename);
-
         if (!file.exists() || !file.isFile()) {
             file.createNewFile();
         }
     }
 
-    public void addChannel(String url) {
-        try(FileWriter writer = new FileWriter(pathToFile + "\\" + filename, true))
-        {
-            createFile();
+    public void addChannel(String url) throws IOException {
+        FileWriter writer = new FileWriter(pathToFile + "\\" + filename, true);
+        createFile();
 
-            BufferedWriter bufferedWriter = new BufferedWriter(writer);
-            bufferedWriter.append(url);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
-        }
-        catch(IOException ex){
-
-        }
+        BufferedWriter bufferedWriter = new BufferedWriter(writer);
+        bufferedWriter.append(url);
+        bufferedWriter.newLine();
+        bufferedWriter.flush();
     }
 
-    public void deleteChannel(String channelToRemove) {
-        try {
-            File channel = new File(pathToFile + "\\" + filename);
-            File file = new File(channel.getAbsolutePath() + ".tmp");
+    public void deleteChannel(String channelToRemove) throws IOException {
+        File channel = new File(pathToFile + "\\" + filename);
+        File file = new File(channel.getAbsolutePath() + ".tmp");
 
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(channel));
-            PrintWriter printWriter = new PrintWriter(new FileWriter(file));
-            String line ;
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(channel));
+        PrintWriter printWriter = new PrintWriter(new FileWriter(file));
+        String line ;
 
-            while ((line = bufferedReader.readLine()) != null) {
-                if (!line.trim().equals(channelToRemove)) {
-                    printWriter.println(line);
-                    printWriter.flush();
-                }
+        while ((line = bufferedReader.readLine()) != null) {
+            if (!line.trim().equals(channelToRemove)) {
+                printWriter.println(line);
+                printWriter.flush();
             }
-            printWriter.close();
-            bufferedReader.close();
-            channel.delete();
-            file.renameTo(channel);
-
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
+        printWriter.close();
+        bufferedReader.close();
+        channel.delete();
+        file.renameTo(channel);
     }
 }

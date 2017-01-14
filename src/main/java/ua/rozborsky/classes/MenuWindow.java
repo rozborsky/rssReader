@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -11,11 +12,12 @@ import java.util.List;
  * Created by roman on 12.01.2017.
  */
 public class MenuWindow{
-
-    SettingsManager settingsManager = new SettingsManager();
+    private JFrame mainWindow;
+    private SettingsManager settingsManager = new SettingsManager();
 
     public void createWindow(JFrame mainWindow) {
         JFrame frame = new JFrame("channels");
+        this.mainWindow = mainWindow;
         setWindowParameters(mainWindow, frame);
         setComponents(frame);
 
@@ -32,30 +34,38 @@ public class MenuWindow{
 
     private void setComponents(JFrame frame) {
         frame.setLayout(new BorderLayout());
-        frame.add(addChannelPanel(), BorderLayout.NORTH);
-        frame.add(scrollBar(channelsPanel()));
+        JPanel channelsPanel = channelsPanel();
+        frame.add(inputChannelPanel(channelsPanel), BorderLayout.NORTH);
+        frame.add(scrollBar(channelsPanel));
     }
 
-    private JPanel addChannelPanel() {
+    private JPanel inputChannelPanel(JPanel channelsPanel) {
         JPanel addChannelsPanel = new JPanel();
         addChannelsPanel.setLayout(new BorderLayout());
         JTextField textField = textField();
         addChannelsPanel.add(textField, BorderLayout.WEST);
-        addChannelsPanel.add(addButton(textField), BorderLayout.EAST);
+        addChannelsPanel.add(addButton(textField, channelsPanel), BorderLayout.EAST);
+
         return addChannelsPanel;
     }
 
     private JTextField textField() {
         JTextField fieldAddChannel = new JTextField(26);
+
         return fieldAddChannel;
     }
 
     private JPanel channelsPanel() {
         JPanel channelsPanel = new JPanel();
-        List<String> channels = settingsManager.getURLs();
-        addChannels(channelsPanel, channels);
-
+        List<String> channels = Collections.EMPTY_LIST;
+        try {
+            channels = settingsManager.getURLs();
+        } catch (IOException e) {
+            new ErrorWindow(mainWindow, "can't get channels list from property file");
+        }
+        channels(channelsPanel, channels);
         channelsPanel.setBackground(new Color(255, 255, 204));
+
         return channelsPanel;
     }
 
@@ -68,7 +78,7 @@ public class MenuWindow{
         return jScrollPane;
     }
 
-    private void addChannels(JPanel channelsPanel, List channels) {
+    private void channels(JPanel channelsPanel, List channels) {
         Iterator entries = channels.iterator();
         channelsPanel.setLayout(new BoxLayout(channelsPanel, BoxLayout.Y_AXIS));
 
@@ -90,25 +100,31 @@ public class MenuWindow{
         JButton button = new JButton("delete");
         button.addActionListener(new ActionListener()
         {
-            public void actionPerformed(ActionEvent e)
-            {
-                SettingsManager settingsManager = new SettingsManager();
-                settingsManager.deleteChannel(channel);
+            public void actionPerformed(ActionEvent e){
+                try {
+                    settingsManager.deleteChannel(channel);
+                } catch (IOException e1) {
+                    new ErrorWindow(mainWindow, "can't delete channel");
+                }
             }
         });
 
         return button;
     }
 
-    private JButton addButton(final JTextField textField) {
+    private JButton addButton(final JTextField textField, final JPanel channelsPanel) {
         JButton button = new JButton("add");
         button.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                SettingsManager settingsManager = new SettingsManager();
-                settingsManager.addChannel(textField.getText());
+                try {
+                    settingsManager.addChannel(textField.getText());
+                } catch (IOException e1) {
+                    new ErrorWindow(mainWindow, "can't add channel to property file");
+                }
                 textField.setText("");
+            SwingUtilities.updateComponentTreeUI(channelsPanel);
             }
         });
 
