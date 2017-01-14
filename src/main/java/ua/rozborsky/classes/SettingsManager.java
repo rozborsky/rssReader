@@ -26,7 +26,6 @@ public class SettingsManager {
         return channels;
     }
 
-
     private void createFile() throws IOException {
         File file = new File(pathToFile + "\\" + filename);
         if (!file.exists() || !file.isFile()) {
