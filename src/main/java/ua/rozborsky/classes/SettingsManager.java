@@ -18,6 +18,7 @@ public class SettingsManager {
         while ((currentLine = br.readLine()) != null) {
             channels.add(currentLine);
         }
+        br.close();
 //        https://lenta.ru/rss
 //        https://snob.ru/rss/all
 //        http://www.pravda.com.ua/rss/
@@ -41,6 +42,7 @@ public class SettingsManager {
         bufferedWriter.append(url);
         bufferedWriter.newLine();
         bufferedWriter.flush();
+        bufferedWriter.close();
     }
 
     public void deleteChannel(String channelToRemove) throws IOException {
