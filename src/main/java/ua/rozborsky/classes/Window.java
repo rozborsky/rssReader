@@ -103,10 +103,8 @@ public class Window implements View {
         {
             public void actionPerformed(ActionEvent e)
             {
-                frame.setEnabled(false);
                 MenuWindow window = new MenuWindow();
                 window.createWindow(frame);
-                frame.setEnabled(true);
             }
         });
 

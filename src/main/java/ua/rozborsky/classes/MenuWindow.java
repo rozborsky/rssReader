@@ -12,12 +12,16 @@ import java.util.List;
  * Created by roman on 12.01.2017.
  */
 public class MenuWindow{
+    private static JFrame frame;
+
     private JFrame mainWindow;
     private SettingsManager settingsManager = new SettingsManager();
 
 
     public void createWindow(JFrame mainWindow) {
-        JFrame frame = new JFrame("channels");
+        if (frame == null) {
+            frame = new JFrame("channels");
+        }
         this.mainWindow = mainWindow;
         setWindowParameters(mainWindow, frame);
         setComponents(frame);
