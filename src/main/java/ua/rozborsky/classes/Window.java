@@ -92,7 +92,7 @@ public class Window implements View {
         menuBar.setSize((int) frame.getSize().getWidth(), 50);
         menuBar.setBackground(new Color(204, 229, 225));
         menuBar.add(menuButton(), BorderLayout.WEST);
-        menuBar.add(getNewsButton(newsPanel), BorderLayout.EAST);
+        //menuBar.add(getNewsButton(newsPanel), BorderLayout.EAST); TODO repaint news panel
 
         return menuBar;
     }
@@ -118,8 +118,6 @@ public class Window implements View {
             public void actionPerformed(ActionEvent e)
             {
 
-                //newsPanel.revalidate();
-                SwingUtilities.updateComponentTreeUI(newsPanel);
                 System.out.println("getnews");
             }
         });
