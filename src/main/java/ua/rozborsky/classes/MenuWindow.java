@@ -15,6 +15,7 @@ public class MenuWindow{
     private JFrame mainWindow;
     private SettingsManager settingsManager = new SettingsManager();
 
+
     public void createWindow(JFrame mainWindow) {
         JFrame frame = new JFrame("channels");
         this.mainWindow = mainWindow;
@@ -35,16 +36,16 @@ public class MenuWindow{
     private void setComponents(JFrame frame) {
         frame.setLayout(new BorderLayout());
         JPanel channelsPanel = channelsPanel();
-        frame.add(inputChannelPanel(channelsPanel), BorderLayout.NORTH);
+        frame.add(inputChannelPanel(), BorderLayout.NORTH);
         frame.add(scrollBar(channelsPanel));
     }
 
-    private JPanel inputChannelPanel(JPanel channelsPanel) {
+    private JPanel inputChannelPanel() {
         JPanel addChannelsPanel = new JPanel();
         addChannelsPanel.setLayout(new BorderLayout());
         JTextField textField = textField();
         addChannelsPanel.add(textField, BorderLayout.WEST);
-        addChannelsPanel.add(addButton(textField, channelsPanel), BorderLayout.EAST);
+        addChannelsPanel.add(addButton(textField), BorderLayout.EAST);
 
         return addChannelsPanel;
     }
@@ -112,19 +113,21 @@ public class MenuWindow{
         return button;
     }
 
-    private JButton addButton(final JTextField textField, final JPanel channelsPanel) {
+    private JButton addButton(final JTextField textField) {
         JButton button = new JButton("add");
         button.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
                 try {
-                    settingsManager.addChannel(textField.getText());
+                    String channel = textField.getText();
+                    if (!channel.equals("")) {
+                        settingsManager.addChannel(channel);
+                    }
                 } catch (IOException e1) {
                     new ErrorWindow(mainWindow, "can't add channel to property file");
                 }
                 textField.setText("");
-            SwingUtilities.updateComponentTreeUI(channelsPanel);
             }
         });
 
